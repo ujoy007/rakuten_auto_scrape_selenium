@@ -19,7 +19,7 @@ This project scrapes discounted items from Rakuten's Super Sale page using Selen
 Install dependencies:
 
 ```bash
-pip install selenium googletrans==4.0.0rc1 fastapi uvicorn
+pip install -r requirements.txt
 ```
 
 You may also need to install ChromeDriver, but Selenium can handle it automatically with `webdriver-manager`.
@@ -55,7 +55,7 @@ You may also need to install ChromeDriver, but Selenium can handle it automatica
 - `main.py`: FastAPI application with endpoints.
 - `start_server.py`: Script to start the FastAPI server.
 - `storage.json`: JSON file where scraped data is stored.
-- `requirements.txt`: (Currently empty) List of Python dependencies.
+- `requirements.txt`: List of Python dependencies.
 
 ## Notes
 
