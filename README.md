@@ -28,45 +28,81 @@ You may also need to install ChromeDriver, but Selenium can handle it automatica
 
 ## Usage
 
-1. **Run the AI scraper:**
+### AI Scraper (Automated Updated Version)
 
-   ```bash
-   python ai_scraper.py
-   ```
+The `ai_scraper ( automated updated).py` script is an advanced scraper for Rakuten Super Sale that extracts products and banners, translates Japanese text to English, and supports automated monitoring for new discounts.
 
-   This will scrape the Rakuten page, perform OCR, index content with embeddings, and save categorized results to `ai_storage.json`.
+**Features:**
+- Scrapes product details: titles (Japanese/English), prices, discounts, images, and links.
+- Extracts banner texts and images with translation.
+- Deduplicates data across runs to avoid repeats.
+- Blocks unwanted network requests (ads, trackers) for faster loading.
+- Safe parsing to handle missing elements without errors.
+- Automated monitoring mode with customizable intervals and round limits.
+- Saves data to `ai_storage.json` in JSON format.
+
+**How to Run:**
+
+1. **Interactive Scraping:**
+
+    ```bash
+    python "ai_scraper ( automated updated).py"
+    ```
+
+    - The script will detect the number of available products on the page.
+    - It will prompt you to enter how many products to scrape (e.g., 10, 50).
+    - It scrapes the specified number of products and banners, translates text, and saves to `ai_storage.json`.
+    - After the initial scrape, it offers to enter automated monitoring mode.
+
+2. **Automated Monitoring Mode:**
+
+    - If you choose 'y' when prompted, enter:
+      - Interval: Time between checks (e.g., '60' for 60 seconds, '5m' for 5 minutes).
+      - Max rounds: Number of rounds to run (0 for infinite).
+    - The script will repeatedly scrape at the set interval, only saving new data.
+    - It stops after the specified rounds or manually.
+
+**Sample Output:**
+The scraped data includes:
+- Products: `title_ja`, `title_en`, `original_price`, `discounted_price`, `discount_percent_ja`, `discount_percent_en`, `image_url`, `link`, `scraped_at`.
+- Banners: `text_ja`, `text_en`, `image_url`, `scraped_at`.
+
+Data is appended to `ai_storage.json` with deduplication.
+
+### Traditional Scraper (FastAPI Server)
 
 2. **Start the server for traditional scraping:**
 
-   ```bash
-   python start_server.py
-   ```
+    ```bash
+    python start_server.py
+    ```
 
-   The server will run on `http://127.0.0.1:8000`.
+    The server will run on `http://127.0.0.1:8000`.
 
 3. **Scrape data immediately:**
 
-   - Endpoint: `GET /scrape`
-   - Example: `http://127.0.0.1:8000/scrape`
+    - Endpoint: `GET /scrape`
+    - Example: `http://127.0.0.1:8000/scrape`
 
 4. **Scrape data repeatedly with interval:**
 
-   - Endpoint: `GET /scrape?interval=<seconds>`
-   - Example: `http://127.0.0.1:8000/scrape?interval=120` (scrapes every 2 minutes)
+    - Endpoint: `GET /scrape?interval=<seconds>`
+    - Example: `http://127.0.0.1:8000/scrape?interval=120` (scrapes every 2 minutes)
 
 5. **Retrieve stored data:**
 
-   - Endpoint: `GET /data`
-   - Returns all scraped items from `storage.json`.
+    - Endpoint: `GET /data`
+    - Returns all scraped items from `storage.json`.
 
 ## Files
 
 - `scraper.py`: Traditional scraping logic using Selenium.
-- `ai_scraper.py`: AI-powered scraping with OCR and embeddings using Playwright.
+- `ai_scraper.py`: Basic AI-powered scraping script.
+- `ai_scraper ( automated updated).py`: Advanced scraper with product/banner extraction, Japanese-to-English translation, deduplication, automated monitoring, and network optimization using Playwright.
 - `main.py`: FastAPI application with endpoints.
 - `start_server.py`: Script to start the FastAPI server.
 - `storage.json`: JSON file where traditional scraped data is stored.
-- `ai_storage.json`: JSON file where AI-scraped and categorized data is stored.
+- `ai_storage.json`: JSON file where AI-scraped data (products and banners) is stored with deduplication.
 - `requirements.txt`: List of Python dependencies.
 
 ## Notes
