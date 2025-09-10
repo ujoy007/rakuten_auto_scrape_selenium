@@ -105,6 +105,66 @@ Data is appended to `ai_storage.json` with deduplication.
 - `ai_storage.json`: JSON file where AI-scraped data (products and banners) is stored with deduplication.
 - `requirements.txt`: List of Python dependencies.
 
+## Detailed Python Files Description
+
+The project contains several Python scripts that have evolved over time, each building on the previous versions with added features. Below is a sequential overview of the Python files, organized by development progression:
+
+### 1. `scraper.py`
+- **Purpose**: Basic web scraper for Rakuten Super Sale using Selenium.
+- **Features**:
+  - Extracts product titles, original/discounted prices, discount labels, images, and links.
+  - Translates Japanese text to English using Google Translate.
+  - Auto-scrolls to load lazy content.
+  - Saves data to `storage.json`, appending new items to existing data.
+- **Usage**: Run directly or via the FastAPI server in `main.py`.
+- **Limitations**: No deduplication, no OCR, no automated monitoring.
+
+### 2. `main.py`
+- **Purpose**: FastAPI web server that integrates with `scraper.py` for API-based scraping.
+- **Features**:
+  - Provides REST API endpoints: `/scrape` (with optional interval for repeated scraping) and `/data` (to retrieve stored data).
+  - Supports one-time or continuous scraping with customizable intervals.
+- **Usage**: Start the server with `python main.py`, then access via browser or API calls.
+- **Dependencies**: Requires `scraper.py` for scraping functionality.
+
+### 3. `ai_scraper (old).py`
+- **Purpose**: Early AI-powered scraper using Playwright, OCR, and semantic search.
+- **Features**:
+  - Scrapes visible text and performs OCR on images using Tesseract.
+  - Filters content based on discount-related keywords.
+  - Uses sentence transformers for embeddings and ChromaDB for semantic search and storage.
+  - Categorizes scraped data into discounts, prices, coupons, etc.
+- **Usage**: Run directly to scrape and index content for querying.
+- **Limitations**: No product-specific extraction, focuses on general text snippets.
+
+### 4. `ai_scraper (scapy based).py`
+- **Purpose**: Advanced AI scraper with NLP and concurrent processing.
+- **Features**:
+  - Uses Playwright for scraping, OCR for banner images, and spaCy for NLP-based product detection.
+  - Concurrent OCR processing with ThreadPoolExecutor.
+  - Parses prices and calculates discount percentages.
+  - Translates Japanese text to English.
+  - Saves structured data to `ai_storage.json`.
+- **Usage**: Run directly for one-time scraping.
+- **Note**: This appears to be an intermediate version; `ai_scraper.py` is a duplicate.
+
+### 5. `ai_scraper.py`
+- **Purpose**: Duplicate of `ai_scraper (scapy based).py`.
+- **Note**: Identical functionality to the scapy-based version. Consider consolidating.
+
+### 6. `ai_scraper ( automated updated).py`
+- **Purpose**: Latest and most advanced scraper with automated monitoring.
+- **Features**:
+  - Extracts both products and banners with deduplication across runs.
+  - Translates Japanese text to English and cleans symbols.
+  - Blocks unwanted network requests for faster loading.
+  - Interactive mode: Prompts user for number of products to scrape.
+  - Automated monitoring mode: Repeated scraping at set intervals with configurable rounds.
+  - Safe parsing to handle missing elements without errors.
+  - Saves to `ai_storage.json` with deduplication.
+- **Usage**: Run directly; choose between interactive or automated mode.
+- **Advantages**: Most feature-complete, includes monitoring and optimization.
+
 ## Notes
 
 - The scrapers use headless Chrome for automation.
